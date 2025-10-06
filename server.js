@@ -1,3 +1,4 @@
+import sequelize from "./src/config/db.js";
 import express from "express";
 import dotenv from "dotenv";
 
@@ -15,7 +16,7 @@ app.use(express.static("public"));
 
 // Basic route for testing
 app.get("/", (req, res) => {
-    res.send("BeqaaGo backend is running 🚀");
+    res.send("BekaaGo backend is running 🚀");
 });
 
 // Start server
