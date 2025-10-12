@@ -1,0 +1,115 @@
+/* Base reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+/* Background */
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #002a20, #004d3c);
+    color: #fff;
+}
+
+/* Card */
+.register-card {
+    background: #013729;
+    padding: 3rem 2.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Titles */
+.app-title {
+    font-size: 2.3rem;
+    color: #00a86b;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+}
+
+h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: #e7e7e7;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: #cfded8;
+    margin-bottom: 2rem;
+}
+
+/* Inputs */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid transparent;
+    border-radius: 0.6rem;
+    background-color: #024634;
+    color: #fff;
+    font-size: 0.95rem;
+    transition: border 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border: 2px solid #00a86b;
+}
+
+/* Button */
+.register-btn {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: #00a86b;
+    border: none;
+    border-radius: 0.6rem;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.register-btn:hover {
+    background-color: #00915d;
+}
+
+/* Login link */
+.login-link {
+    margin-top: 1.4rem;
+    font-size: 0.9rem;
+    color: #cfded8;
+}
+
+.login-link a {
+    color: #00a86b;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .register-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .app-title {
+        font-size: 2rem;
+    }
+}
