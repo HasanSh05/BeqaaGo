@@ -1,0 +1,140 @@
+/* ========== GENERAL STYLES ========== */
+body {
+  margin: 0;
+  background: #fffdf9;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* ========== LOGO ANIMATION ========== */
+.logo-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fffdf9;
+  position: relative;
+  transition: all 0.8s ease;
+}
+
+.logo-animation {
+  display: flex;
+  gap: 15px;
+  font-weight: 700;
+  font-size: 4rem;
+  color: #00b050;
+  z-index: 2;
+}
+
+.letter {
+  opacity: 0;
+  transform: translateY(100px);
+  animation: jump 0.8s ease forwards;
+}
+
+.letter.red {
+  color: #ff3b30;
+}
+
+/* Stagger each letter */
+.letter:nth-child(1) { animation-delay: 0.1s; }
+.letter:nth-child(2) { animation-delay: 0.3s; }
+.letter:nth-child(3) { animation-delay: 0.5s; }
+.letter:nth-child(4) { animation-delay: 0.7s; }
+.letter:nth-child(5) { animation-delay: 0.9s; }
+.letter:nth-child(6) { animation-delay: 1.1s; }
+.letter:nth-child(7) { animation-delay: 1.3s; }
+
+@keyframes jump {
+  0% { opacity: 0; transform: translateY(100px); }
+  50% { opacity: 1; transform: translateY(-40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes squeeze {
+  0% { letter-spacing: 15px; }
+  100% { letter-spacing: 3px; }
+}
+
+.logo-animation {
+  animation: squeeze 0.8s ease-in-out 2.4s forwards;
+}
+
+/* ========== SCOOTER ANIMATION ========== */
+.scooter {
+  position: absolute;
+  bottom: 40px;   /* ↓ Closer to letters (was 80px) */
+  left: -180px;
+  width: 150px;   /* slightly smaller for proportional look */
+  opacity: 0;
+  z-index: 2;     /* ↑ ensures it passes in front of letters */
+}
+
+.scooter.move {
+  opacity: 1;
+  animation: drive 2.5s ease-in-out forwards;
+}
+
+@keyframes drive {
+  0% { transform: translateX(0) translateY(10px) rotate(0deg); opacity: 1; }
+  30% { transform: translateX(40vw) translateY(-5px) rotate(-5deg); }
+  60% { transform: translateX(70vw) translateY(0px) rotate(3deg); }
+  100% { transform: translateX(110vw) translateY(10px); opacity: 0; }
+}
+
+
+/* ========== SHRINK TRANSITION ========== */
+.logo-container.shrink {
+  height: 150px;
+  transform: translateY(-30px);
+}
+
+/* ========== HERO SECTION ========== */
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.hero-content h1 {
+  color: #2e2e2e;
+  font-weight: 600;
+  font-size: 1.7rem;
+  max-width: 480px;
+  margin-bottom: 30px;
+}
+
+.cta {
+  background-color: #ff3b30;
+  color: #fff;
+  border: none;
+  padding: 14px 38px;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cta:hover {
+  background-color: #e52b20;
+}
+
+.hidden {
+  display: none;
+}
+
+.logo-container.shrink + .hero {
+  display: flex;
+  opacity: 1;
+  animation: fadeIn 1s ease forwards 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

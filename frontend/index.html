@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BeqaaGo</title>
+  <link rel="stylesheet" href="styles/index.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- LOGO + SCOOTER ANIMATION -->
+  <div class="logo-container">
+    <img src="images/Motorcycle.png" alt="Delivery Guy" class="scooter">
+    <div class="logo-animation">
+      <span class="letter">B</span>
+      <span class="letter">E</span>
+      <span class="letter">Q</span>
+      <span class="letter">A</span>
+      <span class="letter">A</span>
+      <span class="letter red">G</span>
+      <span class="letter red">O</span>
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="hero hidden">
+    <div class="hero-content">
+      <h1>Order from your favorite Beqaa restaurants — fast and local!</h1>
+      <button class="cta">Start Ordering</button>
+    </div>
+  </section>
+
+  <script>
+    // Show scooter animation + logo
+    setTimeout(() => {
+      document.querySelector(".scooter").classList.add("move");
+    }, 1200);
+
+    // Reveal hero section
+    setTimeout(() => {
+      document.querySelector(".logo-container").classList.add("shrink");
+      document.querySelector(".hero").classList.remove("hidden");
+    }, 3500);
+  </script>
+
+</body>
+</html>
