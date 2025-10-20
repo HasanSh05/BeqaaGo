@@ -1,25 +1,20 @@
-import { Sequelize } from "sequelize";
+import mysql from "mysql2";
 import dotenv from "dotenv";
+dotenv.config({ path: "./backend/.env" }); // ✅ important path
 
-dotenv.config();
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 
-const sequelize = new Sequelize(
-    process.env.DB_NAME,        // beqaago
-    process.env.DB_USER,        // root
-    process.env.DB_PASSWORD,    // your password
-    {
-        host: process.env.DB_HOST, // localhost
-        dialect: "mysql",
-        logging: false,            // hides raw SQL logs (optional)
-    }
-);
+console.log("DB_USER:", process.env.DB_USER);
+console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
 
-// Test connection
-try {
-    await sequelize.authenticate();
-    console.log("✅ Connected to MySQL Database via Sequelize!");
-} catch (error) {
-    console.error("❌ Unable to connect to the database:", error);
-}
+db.connect(err => {
+  if (err) console.log("❌ Database connection failed:", err);
+  else console.log("✅ Connected to MySQL");
+});
 
-export default sequelize;
+export default db;

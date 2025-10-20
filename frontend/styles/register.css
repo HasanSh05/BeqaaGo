@@ -98,6 +98,27 @@ body {
 }
 .login-text a:hover { text-decoration: underline; }
 
+/* ========== VALIDATION ========== */
+.input-error {
+  border-color: #ff3b30 !important;
+  box-shadow: 0 0 5px rgba(255, 59, 48, 0.3);
+}
+
+.error-message {
+  color: #ff3b30;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.error-message::before {
+  content: "⚠️";
+  font-size: 0.9rem;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
   .register-container {

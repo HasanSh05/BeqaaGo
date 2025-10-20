@@ -1,25 +1,7 @@
-import sequelize from "./src/config/db.js";
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config({ path: "./backend/.env" });
 
-// Load environment variables
-dotenv.config();
+import app from "./app.js";
 
-const app = express();
-const PORT = process.env.PORT || 3005;
-
-// Middleware to parse JSON
-app.use(express.json());
-
-// Serve static files (HTML, CSS, JS) from the public folder
-app.use(express.static("public"));
-
-// Basic route for testing
-app.get("/", (req, res) => {
-    res.send("BekaaGo backend is running 🚀");
-});
-
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 5550;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

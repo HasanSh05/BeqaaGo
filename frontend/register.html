@@ -42,6 +42,78 @@
       }, 600);
     });
   </script>
+<script>
+document.querySelector(".register-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  // remove old errors
+  document.querySelectorAll(".error-message").forEach(msg => msg.remove());
+  document.querySelectorAll("input").forEach(input => input.classList.remove("input-error"));
+
+  const name = e.target[0].value.trim();
+  const email = e.target[1].value.trim();
+  const password = e.target[2].value;
+  const confirm = e.target[3].value;
+
+  let valid = true;
+
+  // helper to show error message
+  const showError = (input, message) => {
+    input.classList.add("input-error");
+    const msg = document.createElement("div");
+    msg.classList.add("error-message");
+    msg.textContent = message;
+    input.insertAdjacentElement("afterend", msg);
+    valid = false;
+  };
+
+  // ========== VALIDATIONS ==========
+
+  if (!name) showError(e.target[0], "Name is required");
+
+  // Email format check
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email) showError(e.target[1], "Email is required");
+  else if (!emailRegex.test(email)) showError(e.target[1], "Enter a valid email (e.g., name@email.com)");
+
+  // Password rules
+  if (!password) showError(e.target[2], "Password is required");
+  else if (password.length < 6)
+    showError(e.target[2], "Password must be at least 6 characters");
+  else if (!/[A-Z]/.test(password))
+    showError(e.target[2], "Password must contain at least one uppercase letter");
+  else if (!/\d/.test(password))
+    showError(e.target[2], "Password must contain at least one number");
+
+  // Confirm password
+  if (confirm !== password) showError(e.target[3], "Passwords do not match");
+
+  if (!valid) return; // stop if any validation failed
+
+  // ========== SEND TO BACKEND ==========
+
+  try {
+    const response = await fetch("http://localhost:5550/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("✅ Registration successful!");
+      window.location.href = "login.html";
+    } else {
+      showError(e.target[1], data.message || "Registration failed");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("⚠️ Server error — please try again later.");
+  }
+});
+</script>
 
 </body>
 </html>

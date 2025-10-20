@@ -26,6 +26,36 @@
       </p>
     </div>
   </div>
+<script>
+document.querySelector(".login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = e.target[0].value;
+  const password = e.target[1].value;
+
+  try {
+    const response = await fetch("http://localhost:5550/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("✅ Login successful!");
+      localStorage.setItem("token", data.token); // save token for later use
+      window.location.href = "dashboard.html"; // redirect after login
+    } else {
+      alert("❌ " + data.message);
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("⚠️ Server error — please try again later.");
+  }
+});
+</script>
 
 </body>
 </html>
