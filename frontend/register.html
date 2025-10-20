@@ -1,44 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BekaaGo | Register</title>
-    <link rel="stylesheet" href="styles/register.css" />
-    <link rel="icon" href="assets/logos/logo.svg" type="image/svg+xml" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BeqaaGo | Register</title>
+  <link rel="stylesheet" href="styles/register.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
-
 <body>
-    <div class="register-container">
-        <div class="register-card">
-            <h1 class="app-title">BekaaGo</h1>
-            <h2>Create Account</h2>
-            <p class="subtitle">Join the fastest delivery service in Bekaa</p>
 
-            <form class="register-form">
-                <div class="form-group">
-                    <input type="text" placeholder="Full Name" required />
-                </div>
-                <div class="form-group">
-                    <input type="email" placeholder="Email address" required />
-                </div>
-                <div class="form-group">
-                    <input type="password" placeholder="Password" required />
-                </div>
-                <div class="form-group">
-                    <input type="password" placeholder="Confirm Password" required />
-                </div>
+  <div class="register-container">
+    <div class="register-card">
+      <h1 class="logo"><span class="green">Beqaa</span><span class="red">Go</span></h1>
+      <p class="welcome">Create your account ✨</p>
 
-                <button type="submit" class="register-btn">Create Account</button>
+      <form class="register-form" onsubmit="return false;">
+        <input type="text" placeholder="Full Name" required />
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <input type="password" placeholder="Confirm Password" required />
+        <button type="submit" class="btn-register">Register</button>
+      </form>
 
-                <p class="login-link">
-                    Already have an account?
-                    <a href="login.html">Login here</a>
-                </p>
-            </form>
-        </div>
+      <p class="login-text">
+        Already have an account?
+        <a href="login.html" id="toLogin">Login here</a>
+      </p>
     </div>
-</body>
+  </div>
 
+  <script>
+    // fade-in page
+    document.body.classList.add("fade-in");
+
+    // smooth back-to-login
+    document.getElementById("toLogin").addEventListener("click", e => {
+      e.preventDefault();
+      document.body.classList.add("fade-out");
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 600);
+    });
+  </script>
+
+</body>
 </html>

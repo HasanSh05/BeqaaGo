@@ -1,115 +1,110 @@
-/* Base reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-}
-
-/* Background */
+/* ========== GENERAL ========== */
 body {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #002a20, #004d3c);
-    color: #fff;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: url("../images/hero.png") no-repeat center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #2e2e2e;
+  animation: fadeInPage 0.6s ease forwards;
 }
 
-/* Card */
-.login-card {
-    background: #013729;
-    padding: 3rem 2.5rem;
-    border-radius: 1.5rem;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
-    width: 90%;
-    max-width: 380px;
-    text-align: center;
+@keyframes fadeInPage {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Titles */
-.app-title {
-    font-size: 2.3rem;
-    color: #00a86b;
-    margin-bottom: 1rem;
-    letter-spacing: 1px;
+
+/* ========== CARD CONTAINER ========== */
+.login-container {
+  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.75);
+  padding: 40px 60px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 350px;
 }
 
-h2 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-    color: #e7e7e7;
+.logo {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.logo .green { color: #00b050; }
+.logo .red { color: #ff3b30; }
+
+.welcome {
+  margin-bottom: 30px;
+  font-weight: 500;
+  color: #444;
 }
 
-.subtitle {
-    font-size: 0.9rem;
-    color: #cfded8;
-    margin-bottom: 2rem;
+/* ========== FORM ========== */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-/* Inputs */
-.form-group {
-    margin-bottom: 1.2rem;
+.login-form input {
+  padding: 12px 15px;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.3s ease;
 }
 
-input {
-    width: 100%;
-    padding: 0.8rem;
-    border: 2px solid transparent;
-    border-radius: 0.6rem;
-    background-color: #024634;
-    color: #fff;
-    font-size: 0.95rem;
-    transition: border 0.3s;
+.login-form input:focus {
+  border-color: #00b050;
 }
 
-input:focus {
-    outline: none;
-    border: 2px solid #00a86b;
+/* ========== BUTTON ========== */
+.btn-login {
+  background-color: #ff3b30;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 12px rgba(255, 59, 48, 0.25);
 }
 
-/* Button */
-.login-btn {
-    width: 100%;
-    padding: 0.9rem;
-    background-color: #00a86b;
-    border: none;
-    border-radius: 0.6rem;
-    font-size: 1rem;
-    color: #fff;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.3s;
+.btn-login:hover {
+  background-color: #e52b20;
+  transform: scale(1.03);
 }
 
-.login-btn:hover {
-    background-color: #00915d;
+/* ========== REGISTER LINK ========== */
+.register-text {
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: #444;
 }
 
-/* Register link */
-.register-link {
-    margin-top: 1.4rem;
-    font-size: 0.9rem;
-    color: #cfded8;
+.register-text a {
+  color: #00b050;
+  text-decoration: none;
+  font-weight: 600;
 }
 
-.register-link a {
-    color: #00a86b;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.register-link a:hover {
-    text-decoration: underline;
+.register-text a:hover {
+  text-decoration: underline;
 }
 
 /* Responsive */
 @media (max-width: 480px) {
-    .login-card {
-        padding: 2rem 1.5rem;
-    }
-
-    .app-title {
-        font-size: 2rem;
-    }
+  .login-container {
+    width: 80%;
+    padding: 30px 25px;
+  }
+  .logo {
+    font-size: 1.8rem;
+  }
 }
