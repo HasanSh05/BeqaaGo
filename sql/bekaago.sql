@@ -1,0 +1,58 @@
+-- -- sql/bekaago.sql
+-- CREATE DATABASE IF NOT EXISTS bekaago;
+-- USE bekaago;
+-- -- Users
+-- CREATE TABLE IF NOT EXISTS users (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   fullname VARCHAR(100) NOT NULL,
+--   email VARCHAR(120) NOT NULL UNIQUE,
+--   password_hash VARCHAR(255) NOT NULL,
+--   role ENUM('customer','vendor','driver','admin') DEFAULT 'customer',
+--   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- ) ENGINE=InnoDB;
+-- -- Vendors
+-- CREATE TABLE IF NOT EXISTS vendors (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   name VARCHAR(120) NOT NULL,
+--   address VARCHAR(255),
+--   phone VARCHAR(30),
+--   lat DECIMAL(10,8),    -- optional for maps
+--   lng DECIMAL(11,8),
+--   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- ) ENGINE=InnoDB;
+-- -- Products / Items
+-- CREATE TABLE IF NOT EXISTS products (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   vendor_id INT NOT NULL,
+--   name VARCHAR(150) NOT NULL,
+--   description VARCHAR(255),
+--   price DECIMAL(10,2) NOT NULL,
+--   is_active TINYINT(1) DEFAULT 1,
+--   FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+-- ) ENGINE=InnoDB;
+-- -- Orders
+-- CREATE TABLE IF NOT EXISTS orders (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   user_id INT NOT NULL,
+--   vendor_id INT NOT NULL,
+--   status ENUM('PENDING','PREPARING','ON_THE_WAY','DELIVERED','CANCELLED') DEFAULT 'PENDING',
+--   total DECIMAL(10,2) NOT NULL DEFAULT 0,
+--   address VARCHAR(255),
+--   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+--   FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+-- ) ENGINE=InnoDB;
+-- -- Order Items
+-- CREATE TABLE IF NOT EXISTS order_items (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   order_id INT NOT NULL,
+--   product_id INT NOT NULL,
+--   qty INT NOT NULL DEFAULT 1,
+--   unit_price DECIMAL(10,2) NOT NULL,
+--   FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+--   FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+-- ) ENGINE=InnoDB;
+-- CREATE INDEX idx_users_email ON users(email);
+-- CREATE INDEX idx_products_vendor ON products(vendor_id);
+-- CREATE INDEX idx_orders_user ON orders(user_id);
+-- CREATE INDEX idx_orders_vendor ON orders(vendor_id);
