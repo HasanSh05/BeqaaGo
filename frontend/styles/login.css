@@ -27,14 +27,37 @@ body {
   text-align: center;
   width: 350px;
 }
-
 .logo {
-  font-size: 2.2rem;
-  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 10px;
+  animation: fadeDown 0.8s ease;
 }
-.logo .green { color: #00b050; }
-.logo .red { color: #ff3b30; }
+
+.logo img {
+  width: 180px;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+}
+
+/* Optional fade-down animation */
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .welcome {
   margin-bottom: 30px;
@@ -96,6 +119,25 @@ body {
 
 .register-text a:hover {
   text-decoration: underline;
+}
+.input-error {
+  border-color: #ff3b30 !important;
+  box-shadow: 0 0 6px rgba(255, 59, 48, 0.4);
+}
+
+.error-message {
+  color: #ff3b30;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.error-message::before {
+  content: "⚠️";
+  font-size: 0.9rem;
 }
 
 /* Responsive */

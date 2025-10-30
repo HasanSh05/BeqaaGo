@@ -11,8 +11,10 @@
 
   <div class="login-container">
     <div class="login-card">
-      <h1 class="logo"><span class="green">Beqaa</span><span class="red">Go</span></h1>
-      <p class="welcome">Welcome back 👋</p>
+    <div class="logo">
+  <img src="images/logo.svg" alt="BeqaaGo Logo" />
+</div>
+  <p class="welcome">Welcome back 👋</p>
 
       <form class="login-form" onsubmit="return false;">
         <input type="email" placeholder="Email" required />
@@ -30,8 +32,31 @@
 document.querySelector(".login-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const email = e.target[0].value;
+  // Clear old errors
+  document.querySelectorAll(".error-message").forEach(msg => msg.remove());
+  document.querySelectorAll("input").forEach(input => input.classList.remove("input-error"));
+
+  const email = e.target[0].value.trim();
   const password = e.target[1].value;
+  let valid = true;
+
+  const showError = (input, message) => {
+    input.classList.add("input-error");
+    const msg = document.createElement("div");
+    msg.classList.add("error-message");
+    msg.textContent = message;
+    input.insertAdjacentElement("afterend", msg);
+    valid = false;
+  };
+
+  // Validate email & password only after submit
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!email) showError(e.target[0], "Email is required");
+  else if (!emailRegex.test(email)) showError(e.target[0], "Enter a valid email address (e.g. name@gmail.com)");
+
+  if (!password) showError(e.target[1], "Password is required");
+
+  if (!valid) return;
 
   try {
     const response = await fetch("http://localhost:5550/api/auth/login", {
@@ -44,10 +69,10 @@ document.querySelector(".login-form").addEventListener("submit", async (e) => {
 
     if (response.ok) {
       alert("✅ Login successful!");
-      localStorage.setItem("token", data.token); // save token for later use
-      window.location.href = "dashboard.html"; // redirect after login
+      localStorage.setItem("token", data.token);
+      window.location.href = "dashboard.html";
     } else {
-      alert("❌ " + data.message);
+      showError(e.target[0], data.message || "Invalid credentials");
     }
 
   } catch (err) {
