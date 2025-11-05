@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>BeqaaGo Dashboard</title>
-  <link rel="stylesheet" href="styles/dashboard.css">
+  <link rel="stylesheet" href="/styles/dashboard.css">
 </head>
 <body>
   <h1>Welcome to BeqaaGo 🚀</h1>
@@ -11,7 +11,7 @@
 
   <script>
     const token = localStorage.getItem("token");
-    if (!token) window.location.href = "login.html";
+    if (!token) window.location.href = "/login";
     else document.getElementById("user-info").innerText = "You’re logged in ✅";
   </script>
 </body>

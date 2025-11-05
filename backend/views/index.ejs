@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BeqaaGo</title>
-  <link rel="stylesheet" href="styles/index.css" />
+  <link rel="stylesheet" href="/styles/index.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- LOGO + SCOOTER ANIMATION (on top initially) -->
+  <!-- LOGO + SCOOTER ANIMATION -->
   <div class="logo-container">
-    <img src="images/Motorcycle.png" alt="Delivery Guy" class="scooter">
+    <img src="/images/Motorcycle.png" alt="Delivery Guy" class="scooter">
     <div class="logo-animation">
       <span class="letter">B</span>
       <span class="letter">E</span>
@@ -23,52 +23,34 @@
     </div>
   </div>
 
-  <!-- HERO (hidden, fades in; sits under the logo while it animates) -->
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
       <h1 class="tagline">Discover and order from your favorite Beqaa restaurants — fast and local!</h1>
       <p class="subtitle">Fresh food, trusted vendors, delivered right to your door.</p>
-    <button class="cta" id="startOrderBtn">
-           Start Ordering
-    </button>
-  </div>
+      <button class="cta" id="startOrderBtn">Start Ordering</button>
+    </div>
   </section>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // scooter move
       setTimeout(() => {
         document.querySelector(".scooter").classList.add("move");
       }, 1200);
 
-      // shrink logo + show hero once
       setTimeout(() => {
         document.querySelector(".logo-container").classList.add("shrink");
         document.querySelector(".hero").classList.add("is-visible");
       }, 3500);
+
+      const btn = document.getElementById("startOrderBtn");
+      btn.addEventListener("click", () => {
+        document.body.classList.add("fade-out");
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 600);
+      });
     });
-    document.addEventListener("DOMContentLoaded", () => {
-  // scooter move
-  setTimeout(() => {
-    document.querySelector(".scooter").classList.add("move");
-  }, 1200);
-
-  // shrink logo + show hero
-  setTimeout(() => {
-    document.querySelector(".logo-container").classList.add("shrink");
-    document.querySelector(".hero").classList.add("is-visible");
-  }, 3500);
-
-  // smooth transition to login
-  const btn = document.getElementById("startOrderBtn");
-  btn.addEventListener("click", () => {
-    document.body.classList.add("fade-out");
-    setTimeout(() => {
-      window.location.href = "login.html";
-    }, 600); // matches CSS transition time
-  });
-});
-
   </script>
 </body>
 </html>
