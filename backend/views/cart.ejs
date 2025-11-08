@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart | BeqaaGo</title>
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+ <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+</head>
+
+<body>
+  <%- include("partials/header") %>
+
+  <main class="cart-page">
+    <h1>🛍️ Your Cart</h1>
+
+    <div id="cart-items"></div>
+    <div id="cart-summary">
+      <p><strong>Total:</strong> <span id="cart-total">$0.00</span></p>
+      <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+    </div>
+
+    <p id="empty-cart" class="empty-cart">Your cart is empty 🛒</p>
+  </main>
+
+  <%- include("partials/footer") %>
+
+  <script>
+    // Load cart items from localStorage
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const container = document.getElementById("cart-items");
+    const empty = document.getElementById("empty-cart");
+    const totalEl = document.getElementById("cart-total");
+
+    if (cart.length === 0) {
+      empty.style.display = "block";
+      document.getElementById("cart-summary").style.display = "none";
+    } else {
+      empty.style.display = "none";
+      let total = 0;
+
+      container.innerHTML = cart.map((item, i) => {
+        total += item.price * item.qty;
+        return `
+          <div class="cart-item">
+            <img src="${item.image}" alt="${item.name}">
+            <div class="info">
+              <h3>${item.name}</h3>
+              <p>$${item.price.toFixed(2)}</p>
+              <div class="qty">
+                <button onclick="updateQty(${i}, -1)">−</button>
+                <span>${item.qty}</span>
+                <button onclick="updateQty(${i}, 1)">+</button>
+              </div>
+            </div>
+            <i class="fa-solid fa-trash" onclick="removeItem(${i})"></i>
+          </div>
+        `;
+      }).join("");
+
+      totalEl.textContent = "$" + total.toFixed(2);
+    }
+
+    function updateQty(index, delta) {
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      location.reload();
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      location.reload();
+    }
+
+    function checkout() {
+      alert("✅ Checkout complete! Your order has been placed.");
+      localStorage.removeItem("cart");
+      window.location.href = "/orders";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<footer class="footer-nav">
+  <div class="<%= page === 'dashboard' ? 'active' : '' %>" onclick="window.location='/dashboard'">
+    <i class="fa-solid fa-house"></i>
+    <p>Home</p>
+  </div>
+  <div class="<%= page === 'search' ? 'active' : '' %>" onclick="window.location='/search'">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <p>Search</p>
+  </div>
+  <div class="<%= page === 'orders' ? 'active' : '' %>" onclick="window.location='/orders'">
+    <i class="fa-solid fa-receipt"></i>
+    <p>Orders</p>
+  </div>
+  <div class="<%= page === 'account' ? 'active' : '' %>" onclick="window.location='/account'">
+    <i class="fa-solid fa-user"></i>
+    <p>Account</p>
+  </div>
+</footer>

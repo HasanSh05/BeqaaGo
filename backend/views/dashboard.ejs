@@ -2,17 +2,108 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>BeqaaGo Dashboard</title>
+  <title>BeqaaGo | Dashboard</title>
   <link rel="stylesheet" href="/styles/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+ <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
 </head>
+
 <body>
-  <h1>Welcome to BeqaaGo 🚀</h1>
-  <p id="user-info"></p>
+ <body>
+  <%- include("partials/header") %>
+<script>
+  // Update cart count badge
+  const items = JSON.parse(localStorage.getItem("cart") || "[]");
+  document.getElementById("cart-count").textContent = items.length;
+</script>
+
+
+  <!-- SEARCH -->
+  <div class="search-bar">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="search" placeholder="Search 'Fast Food'">
+    <i class="fa-solid fa-sliders"></i>
+  </div>
+
+  <!-- PROMO -->
+  <div class="promo-card">
+    <div class="promo-text">
+      <h3>🎉 Free Delivery</h3>
+      <p>On your first 3 orders</p>
+    </div>
+    <img src="/images/promo.avif" alt="Promo">
+  </div>
+
+  <!-- CATEGORIES (Only for Dashboard) -->
+  <section class="categories">
+    <div class="cat active"><img src="/images/icons/all.png"><p>All</p></div>
+    <div class="cat"><img src="/images/icons/burger.png"><p>Food</p></div>
+    <div class="cat"><img src="/images/fresh.webp"><p>Fresh</p></div>
+    <div class="cat"><img src="/images/icons/beauty.png"><p>Beauty</p></div>
+    <div class="cat"><img src="/images/icons/shop.png"><p>Shops</p></div>
+  </section>
+  <!-- VENDORS -->
+  <section class="vendors">
+    <h2>Nearby Restaurants 🍴</h2>
+    <div id="vendor-grid" class="vendor-grid">Loading vendors...</div>
+  </section>
+
+  <%- include("partials/footer") %>
 
   <script>
-    const token = localStorage.getItem("token");
-    if (!token) window.location.href = "/login";
-    else document.getElementById("user-info").innerText = "You’re logged in ✅";
+    async function loadVendors() {
+      const grid = document.getElementById("vendor-grid");
+      try {
+        const res = await fetch("/api/vendors");
+        const vendors = await res.json();
+
+        grid.innerHTML = vendors.length
+          ? vendors.map(v => `
+            <div class="vendor-card">
+              <img src="/images/vendor.jpg" alt="${v.name}">
+              <div class="info">
+                <h3>${v.name}</h3>
+                <p>${v.location || "Beqaa"}</p>
+              </div>
+            </div>`).join("")
+          : "<p>No vendors available yet.</p>";
+      } catch (err) {
+        grid.innerHTML = "<p>⚠️ Failed to load vendors.</p>";
+      }
+    }
+
+    function openLocation() {
+      if (!navigator.geolocation) {
+        alert("Geolocation not supported on this device.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude, longitude } = pos.coords;
+
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await res.json();
+          document.getElementById("user-address").innerText =
+            data.address.city || data.address.town || "Beqaa";
+        } catch {
+          document.getElementById("user-address").innerText = "Location found";
+        }
+      }, (err) => {
+        alert("Please enable location permissions.");
+        document.getElementById("user-address").innerText = "Location Off";
+      });
+    }
+
+    function openCart() {
+      alert("🛒 Your cart is currently empty!");
+    }
+
+    loadVendors();
+    openLocation();
   </script>
 </body>
 </html>

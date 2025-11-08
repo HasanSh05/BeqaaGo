@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search | BeqaaGo</title>
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+ <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+</head>
+
+<body>
+  <%- include("partials/header") %>
+
+  <main class="search-page">
+    <h1>🔍 Search Restaurants or Shops</h1>
+    <div class="search-bar">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="search-input" placeholder="Search for food or places..." oninput="searchVendors()">
+    </div>
+
+    <div id="search-results" class="vendor-grid"></div>
+    <p id="no-results" class="empty-cart">Start typing to find places 🍔</p>
+  </main>
+
+  <%- include("partials/footer") %>
+
+  <script>
+    async function searchVendors() {
+      const query = document.getElementById("search-input").value.trim();
+      const resultsDiv = document.getElementById("search-results");
+      const noResults = document.getElementById("no-results");
+
+      if (!query) {
+        resultsDiv.innerHTML = "";
+        noResults.style.display = "block";
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/vendors/search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+
+        if (data.length === 0) {
+          resultsDiv.innerHTML = "";
+          noResults.innerText = "No matches found ❌";
+          noResults.style.display = "block";
+        } else {
+          noResults.style.display = "none";
+          resultsDiv.innerHTML = data.map(v => `
+            <div class="vendor-card">
+              <img src="/images/vendor.jpg" alt="${v.name}">
+              <div class="info">
+                <h3>${v.name}</h3>
+                <p>${v.location}</p>
+              </div>
+            </div>
+          `).join("");
+        }
+      } catch (err) {
+        resultsDiv.innerHTML = "<p>⚠️ Failed to fetch results.</p>";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -29,56 +29,41 @@
     </div>
   </div>
 
-  <script>
-    document.querySelector(".login-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
+<script>
+document.querySelector(".login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-      document.querySelectorAll(".error-message").forEach(msg => msg.remove());
-      document.querySelectorAll("input").forEach(input => input.classList.remove("input-error"));
+  const email = e.target[0].value.trim();
+  const password = e.target[1].value;
 
-      const email = e.target[0].value.trim();
-      const password = e.target[1].value;
-      let valid = true;
-
-      const showError = (input, message) => {
-        input.classList.add("input-error");
-        const msg = document.createElement("div");
-        msg.classList.add("error-message");
-        msg.textContent = message;
-        input.insertAdjacentElement("afterend", msg);
-        valid = false;
-      };
-
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!email) showError(e.target[0], "Email is required");
-      else if (!emailRegex.test(email)) showError(e.target[0], "Enter a valid email address");
-
-      if (!password) showError(e.target[1], "Password is required");
-      if (!valid) return;
-
-      try {
-        const response = await fetch("http://localhost:5550/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alert("✅ Login successful!");
-          localStorage.setItem("token", data.token);
-          window.location.href = "/dashboard";
-        } else {
-          showError(e.target[0], data.message || "Invalid credentials");
-        }
-
-      } catch (err) {
-        console.error(err);
-        alert("⚠️ Server error — please try again later.");
-      }
+  try {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
     });
-  </script>
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // ✅ Save to localStorage *before* redirecting
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      alert("✅ Login successful!");
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 300); // small delay to ensure data is written
+    } else {
+      alert("❌ " + (data.message || "Invalid credentials"));
+    }
+
+  } catch (err) {
+    alert("⚠️ Server error — please try again later.");
+    console.error(err);
+  }
+});
+</script>
 
 </body>
 </html>

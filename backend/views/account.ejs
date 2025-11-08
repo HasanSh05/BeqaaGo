@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Account | BeqaaGo</title>
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+
+<body>
+  <%- include("partials/header") %>
+
+ <main class="account-page">
+  <h1>👤 My Account</h1>
+
+  <div class="account-card">
+    <p><strong>Name:</strong> <span id="user-name"></span></p>
+    <p><strong>Email:</strong> <span id="user-email"></span></p>
+    <button class="btn-edit" onclick="toggleEdit(true)">Edit Info</button>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+
+  <div id="edit-modal" class="edit-modal">
+    <h2>Edit Profile</h2>
+    <form id="edit-form">
+      <input type="text" id="edit-name" placeholder="Full Name" />
+      <input type="email" id="edit-email" placeholder="Email" />
+      <input type="password" id="edit-password" placeholder="New Password (optional)" />
+      <button type="submit" class="btn-edit">Save Changes</button>
+      <button type="button" class="btn-logout" onclick="toggleEdit(false)">Cancel</button>
+    </form>
+  </div>
+</main>
+
+
+  <%- include("partials/footer") %>
+
+  <script>
+const user = JSON.parse(localStorage.getItem("user") || "{}");
+if (!user.id) {
+  alert("⚠️ Please log in first.");
+  window.location.href = "/login";
+}
+
+document.getElementById("user-name").innerText = user.name;
+document.getElementById("user-email").innerText = user.email;
+
+function toggleEdit(show) {
+  document.getElementById("edit-modal").style.display = show ? "block" : "none";
+  if (show) {
+    document.getElementById("edit-name").value = user.name;
+    document.getElementById("edit-email").value = user.email;
+  }
+}
+
+document.getElementById("edit-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("edit-name").value.trim();
+  const email = document.getElementById("edit-email").value.trim();
+  const password = document.getElementById("edit-password").value.trim();
+
+  try {
+    const res = await fetch(`/api/users/${user.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    if (res.ok) {
+      user.name = name || user.name;
+      user.email = email || user.email;
+      localStorage.setItem("user", JSON.stringify(user));
+      toggleEdit(false);
+      location.reload();
+    }
+  } catch (err) {
+    alert("❌ Failed to update profile.");
+    console.error(err);
+  }
+});
+
+function logout() {
+  localStorage.clear();
+  alert("👋 Logged out successfully!");
+  window.location.href = "/login";
+}
+</script>
+
+</body>
+</html>

@@ -20,6 +20,8 @@ console.log("DB_NAME:", process.env.DB_NAME);
 
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import vendorRoutes from "./routes/vendor.routes.js";
+import orderRoutes from "./routes/order.routes.js";
 
 const app = express();
 
@@ -38,11 +40,27 @@ app.use(express.static(path.join(__dirname, "../frontend")));
 app.get("/", (req, res) => res.render("index"));
 app.get("/login", (req, res) => res.render("login"));
 app.get("/register", (req, res) => res.render("register"));
-app.get("/dashboard", (req, res) => res.render("dashboard"));
+
+// ✅ Dashboard
+app.get("/dashboard", (req, res) => res.render("dashboard", { page: "dashboard" }));
+
+// ✅ Search
+app.get("/search", (req, res) => res.render("search", { page: "search" }));
+
+// ✅ Orders
+app.get("/orders", (req, res) => res.render("orders", { page: "orders" }));
+
+// ✅ Account
+app.get("/account", (req, res) => res.render("account", { page: "account" }));
+app.get("/cart", (req, res) => res.render("cart", { page: "" }));
 
 // API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+
+app.use("/api/vendors", vendorRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/orders", orderRoutes);
 
 // 404 route (temporary fix)
 app.use((req, res) => res.status(404).send("404 - Page Not Found"));

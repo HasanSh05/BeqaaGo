@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Orders | BeqaaGo</title>
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+ <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+</head>
+
+<body>
+  <%- include("partials/header") %>
+
+  <main class="orders-page">
+    <h1>🧾 Your Orders</h1>
+    <div id="orders-list"></div>
+    <p id="no-orders" class="empty-cart">No previous orders yet 🍕</p>
+  </main>
+
+  <%- include("partials/footer") %>
+
+  <script>
+  async function loadOrders() {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const list = document.getElementById("orders-list");
+    const empty = document.getElementById("no-orders");
+
+    if (!user.id) {
+      empty.innerText = "⚠️ Please log in to view your orders.";
+      empty.style.display = "block";
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/orders/${user.id}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      const orders = await res.json();
+
+      if (!Array.isArray(orders) || orders.length === 0) {
+        empty.style.display = "block";
+      } else {
+        empty.style.display = "none";
+        list.innerHTML = orders.map(o => `
+          <div class="order-card">
+            <h3>${o.restaurant}</h3>
+            <p>${new Date(o.created_at).toLocaleString()}</p>
+            <p><strong>Total:</strong> $${o.total}</p>
+            <span class="status ${o.status.toLowerCase()}">${o.status}</span>
+          </div>
+        `).join("");
+      }
+    } catch (err) {
+      console.error(err);
+      empty.innerText = "⚠️ Failed to load orders.";
+      empty.style.display = "block";
+    }
+  }
+
+  loadOrders();
+</script>
+
+</body>
+</html>

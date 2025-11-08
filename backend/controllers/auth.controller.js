@@ -55,10 +55,11 @@ export const login = async (req, res) => {
     );
 
     res.json({
-      message: "Login successful ✅",
-      token,
-      user: { id: user.id, name: user.name, email: user.email },
-    });
+  message: "Login successful ✅",
+  token,
+  user: { id: user.id, name: user.name, email: user.email },
+});
+
   } catch (err) {
     console.error("❌ Login error:", err.message);
     res.status(500).json({ message: "Server error" });

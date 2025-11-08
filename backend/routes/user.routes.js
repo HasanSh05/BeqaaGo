@@ -1,10 +1,10 @@
 import express from "express";
-import { getAllUsers, getUserById } from "../controllers/user.controller.js";
+import { getAllUsers, getUserById, updateUser } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
-router.get("/", getAllUsers);      // GET /api/users
-router.get("/:id", getUserById);   // GET /api/users/:id
+router.get("/", getAllUsers);
+router.get("/:id", getUserById);
+router.put("/:id", updateUser); // new
 
 export default router;
-
