@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vendor Dashboard | BeqaaGo</title>
+  <link rel="stylesheet" href="/styles/vendor.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+
+<div class="vendor-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="brand">BeqaaGo Vendor</h2>
+
+    <nav>
+      <a href="/vendor/dashboard" class="active">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </a>
+
+      <a href="/vendor/menu">
+        <i class="fa-solid fa-utensils"></i> Menu Items
+      </a>
+
+      <a href="/vendor/orders">
+        <i class="fa-solid fa-clipboard-list"></i> Orders
+      </a>
+
+      <a href="/vendor/settings">
+        <i class="fa-solid fa-gear"></i> Settings
+      </a>
+
+      <a href="#" onclick="vendorLogout()" class="logout">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <h1>Welcome, <span id="vendor-name"></span> 👋</h1>
+
+
+    <div class="stats">
+      <div class="stat-box">
+        <h3>Today's Orders</h3>
+        <p id="today-orders">0</p>
+      </div>
+
+      <div class="stat-box">
+        <h3>Total Orders</h3>
+        <p id="total-orders">0</p>
+      </div>
+
+      <div class="stat-box">
+        <h3>Status</h3>
+        <label class="switch">
+          <input type="checkbox" id="availability">
+          <span class="slider"></span>
+        </label>
+        <p class="status-text" id="status-label">Offline</p>
+      </div>
+    </div>
+
+    <section class="latest-orders">
+      <h2>Recent Orders</h2>
+      <div id="recent-orders" class="orders-list">Loading...</div>
+    </section>
+  </main>
+</div>
+
+<script>
+  function vendorLogout() {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+
+  document.addEventListener("DOMContentLoaded", loadVendorDashboard);
+
+  async function loadVendorDashboard() {
+    const vendorUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+    if (!vendorUser.id || vendorUser.role !== "vendor") {
+      window.location.href = "/login";
+      return;
+    }
+
+    document.getElementById("vendor-name").innerText = vendorUser.name;
+
+    try {
+      const res = await fetch(`/api/vendor/orders/${vendorUser.id}`);
+      const data = await res.json();
+
+      document.getElementById("total-orders").innerText = data.total || 0;
+      document.getElementById("today-orders").innerText = data.today || 0;
+
+      const list = document.getElementById("recent-orders");
+
+      if (!data.orders || data.orders.length === 0) {
+        list.innerHTML = "<p>No recent orders yet.</p>";
+        return;
+      }
+
+      list.innerHTML = data.orders
+        .map(
+          (o) => `
+        <div class="order-card">
+          <strong>Order #${o.id}</strong>
+          <p><b>Customer:</b> ${o.customer}</p>
+          <p><b>Total:</b> $${o.total}</p>
+          <p><b>Status:</b> ${o.status}</p>
+          <p><b>Time:</b> ${new Date(o.created_at).toLocaleString()}</p>
+        </div>`
+        )
+        .join("");
+
+    } catch (err) {
+      console.error(err);
+      document.getElementById("recent-orders").innerText = "Failed to load.";
+    }
+  }
+</script>
+
+<script>
+ const vendorUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+if (!vendorUser.id || vendorUser.role !== "vendor") {
+  window.location.href = "/login";
+}
+
+document.getElementById("vendor-name").innerText = vendorUser.name;
+
+</script>
+
+
+</body>
+</html>

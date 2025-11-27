@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vendor Menu | BeqaaGo</title>
+  <link rel="stylesheet" href="/styles/vendor.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="vendor-container">
+  <aside class="sidebar">
+    <h2 class="brand">BeqaaGo Vendor</h2>
+    <nav>
+      <a href="/vendor/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+      <a href="/vendor/menu" class="active"><i class="fa-solid fa-utensils"></i> Menu Items</a>
+      <a href="/vendor/orders"><i class="fa-solid fa-clipboard-list"></i> Orders</a>
+      <a href="/vendor/settings"><i class="fa-solid fa-gear"></i> Settings</a>
+      <a href="#" onclick="vendorLogout()" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <h1>Your Menu</h1>
+
+    <section>
+      <h2>Add New Item</h2>
+      <form id="menu-form">
+        <input type="text" id="item-name" placeholder="Item name" required />
+        <input type="number" id="item-price" placeholder="Price" step="0.01" required />
+        <input type="text" id="item-image" placeholder="Image URL (optional)" />
+        <button type="submit">Add Item</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Existing Items</h2>
+      <div id="menu-list">Loading...</div>
+    </section>
+  </main>
+</div>
+
+<script>
+  function vendorLogout() {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadMenu();
+
+    document.getElementById("menu-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const vendor = JSON.parse(localStorage.getItem("user") || "{}");
+      if (!vendor.id) return alert("Not logged in");
+
+      const item_name = document.getElementById("item-name").value.trim();
+      const price = document.getElementById("item-price").value;
+      const image = document.getElementById("item-image").value.trim();
+
+      try {
+        const res = await fetch(`/api/vendors/${vendor.id}/menu`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ item_name, price, image }),
+        });
+
+        const data = await res.json();
+        alert(data.message || "Added");
+        loadMenu();
+        e.target.reset();
+      } catch (err) {
+        console.error(err);
+        alert("Error adding item");
+      }
+    });
+  });
+
+  async function loadMenu() {
+    const vendor = JSON.parse(localStorage.getItem("user") || "{}");
+    const list = document.getElementById("menu-list");
+    if (!vendor.id) {
+      list.innerHTML = "Not logged in.";
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/vendors/${vendor.id}/menu`);
+      const items = await res.json();
+
+      if (!items.length) {
+        list.innerHTML = "<p>No items yet.</p>";
+        return;
+      }
+
+      list.innerHTML = items.map(i => `
+        <div class="menu-item">
+          <strong>${i.item_name}</strong> - $${i.price}
+        </div>
+      `).join("");
+    } catch (err) {
+      console.error(err);
+      list.innerHTML = "Failed to load menu.";
+    }
+  }
+</script>
+
+</body>
+</html>

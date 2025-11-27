@@ -23,13 +23,13 @@
       </form>
 
       <p class="register-text">
-        Don’t have an account? 
+        Don't have an account? 
         <a href="/register">Register here</a>
       </p>
     </div>
   </div>
 
-<script>
+ <script>
 document.querySelector(".login-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -40,30 +40,36 @@ document.querySelector(".login-form").addEventListener("submit", async (e) => {
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password }),
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      // ✅ Save to localStorage *before* redirecting
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
       alert("✅ Login successful!");
+
       setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 300); // small delay to ensure data is written
+        if (data.user.role === "vendor") {
+          window.location.href = "/vendor/dashboard";
+        } else {
+          window.location.href = "/dashboard";
+        }
+      }, 200);
+
     } else {
       alert("❌ " + (data.message || "Invalid credentials"));
     }
 
   } catch (err) {
-    alert("⚠️ Server error — please try again later.");
     console.error(err);
+    alert("⚠️ Server error — try again later.");
   }
 });
 </script>
+
 
 </body>
 </html>

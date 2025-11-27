@@ -1,87 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Your Cart | BeqaaGo</title>
-  <link rel="stylesheet" href="/styles/dashboard.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
- <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-/>
+  <link rel="stylesheet" href="/styles/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
-
 <body>
   <%- include("partials/header") %>
 
   <main class="cart-page">
-    <h1>🛍️ Your Cart</h1>
-
+    <h1>Your Cart</h1>
     <div id="cart-items"></div>
-    <div id="cart-summary">
-      <p><strong>Total:</strong> <span id="cart-total">$0.00</span></p>
-      <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
-    </div>
+    <p id="cart-empty" class="empty-cart">Your cart is empty.</p>
 
-    <p id="empty-cart" class="empty-cart">Your cart is empty 🛒</p>
+    <div class="cart-summary" id="cart-summary" style="display:none;">
+      <p><strong>Total:</strong> $<span id="cart-total">0</span></p>
+      <button id="checkout-btn">Place Order</button>
+    </div>
   </main>
 
   <%- include("partials/footer") %>
 
-  <script>
-    // Load cart items from localStorage
+<script>
+  function loadCart() {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const container = document.getElementById("cart-items");
-    const empty = document.getElementById("empty-cart");
-    const totalEl = document.getElementById("cart-total");
+    const list = document.getElementById("cart-items");
+    const empty = document.getElementById("cart-empty");
+    const summary = document.getElementById("cart-summary");
+    const totalSpan = document.getElementById("cart-total");
 
-    if (cart.length === 0) {
+    if (!cart.length) {
       empty.style.display = "block";
-      document.getElementById("cart-summary").style.display = "none";
-    } else {
-      empty.style.display = "none";
-      let total = 0;
+      summary.style.display = "none";
+      list.innerHTML = "";
+      return;
+    }
 
-      container.innerHTML = cart.map((item, i) => {
-        total += item.price * item.qty;
-        return `
-          <div class="cart-item">
-            <img src="${item.image}" alt="${item.name}">
-            <div class="info">
-              <h3>${item.name}</h3>
-              <p>$${item.price.toFixed(2)}</p>
-              <div class="qty">
-                <button onclick="updateQty(${i}, -1)">−</button>
-                <span>${item.qty}</span>
-                <button onclick="updateQty(${i}, 1)">+</button>
-              </div>
-            </div>
-            <i class="fa-solid fa-trash" onclick="removeItem(${i})"></i>
+    empty.style.display = "none";
+    summary.style.display = "block";
+
+    let total = 0;
+    list.innerHTML = cart.map(item => {
+      const lineTotal = item.price * item.qty;
+      total += lineTotal;
+      return `
+        <div class="cart-item">
+          <div>
+            <strong>${item.name}</strong>
+            <p>$${item.price} x ${item.qty}</p>
           </div>
-        `;
-      }).join("");
+          <div>$${lineTotal.toFixed(2)}</div>
+        </div>`;
+    }).join("");
 
-      totalEl.textContent = "$" + total.toFixed(2);
+    totalSpan.textContent = total.toFixed(2);
+  }
+
+  async function checkout() {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    if (!user.id) {
+      alert("You must be logged in.");
+      window.location.href = "/login";
+      return;
+    }
+    if (!cart.length) {
+      alert("Cart is empty.");
+      return;
     }
 
-    function updateQty(index, delta) {
-      cart[index].qty += delta;
-      if (cart[index].qty <= 0) cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      location.reload();
-    }
+    const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+    const vendor_id = cart[0].vendor_id;
 
-    function removeItem(index) {
-      cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      location.reload();
-    }
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.id,
+          vendor_id,
+          total,
+        }),
+      });
 
-    function checkout() {
-      alert("✅ Checkout complete! Your order has been placed.");
-      localStorage.removeItem("cart");
-      window.location.href = "/orders";
+      const data = await res.json();
+      if (res.ok) {
+        alert("✅ Order placed!");
+        localStorage.removeItem("cart");
+        window.location.href = "/orders";
+      } else {
+        alert("❌ " + (data.message || "Order failed"));
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error");
     }
-  </script>
+  }
+
+  document.getElementById("checkout-btn").addEventListener("click", checkout);
+  loadCart();
+</script>
+
 </body>
 </html>

@@ -69,17 +69,18 @@
               const res = await fetch("/api/vendors");
               const vendors = await res.json();
 
-              grid.innerHTML = vendors.length
-                ? vendors.map(v => `
-            <div class="vendor-card">
-              <img src="${v.image}" alt="${v.name}">
+             grid.innerHTML = vendors.length
+  ? vendors.map(v => `
+      <div class="vendor-card" onclick="openStore(${v.id})">
+        <img src="${v.image}" alt="${v.name}">
+        <div class="info">
+          <h3>${v.name}</h3>
+          <p>${v.location || "Beqaa"}</p>
+        </div>
+      </div>
+    `).join("")
+  : "<p>No vendors available yet.</p>";
 
-              <div class="info">
-                <h3>${v.name}</h3>
-                <p>${v.location || "Beqaa"}</p>
-              </div>
-            </div>`).join("")
-                : "<p>No vendors available yet.</p>";
             } catch (err) {
               grid.innerHTML = "<p>⚠️ Failed to load vendors.</p>";
             }
@@ -114,6 +115,10 @@
 
           loadVendors();
           openLocation();
+          function openStore(vendorId) {
+  window.location.href = `/store/${vendorId}`;
+}
+
         </script>
   </body>
 

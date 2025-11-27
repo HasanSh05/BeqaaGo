@@ -16,6 +16,18 @@
       </div>
       <p class="welcome">Create your account ✨</p>
 
+      <!-- ROLE CHOICE -->
+      <div class="role-toggle">
+        <label>
+          <input type="radio" name="role" value="user" checked>
+          <span>User</span>
+        </label>
+        <label>
+          <input type="radio" name="role" value="vendor">
+          <span>Vendor</span>
+        </label>
+      </div>
+
       <form class="register-form" onsubmit="return false;" novalidate>
         <input type="text" placeholder="Full Name" required />
         <input type="email" placeholder="Email" required />
@@ -52,6 +64,8 @@
       const email = e.target[1].value.trim();
       const password = e.target[2].value;
       const confirm = e.target[3].value;
+      const role = document.querySelector("input[name='role']:checked").value;
+
       let valid = true;
 
       const showError = (input, message) => {
@@ -64,19 +78,22 @@
       };
 
       if (!name) showError(e.target[0], "Full name is required");
+
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!email) showError(e.target[1], "Email is required");
       else if (!emailRegex.test(email)) showError(e.target[1], "Enter a valid email address");
+
       if (!password) showError(e.target[2], "Password is required");
       else if (password.length < 8) showError(e.target[2], "Password must be at least 8 characters");
+
       if (confirm !== password) showError(e.target[3], "Passwords do not match");
       if (!valid) return;
 
       try {
-        const response = await fetch("http://localhost:5550/api/auth/register", {
+        const response = await fetch("/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password })
+          body: JSON.stringify({ name, email, password, role })
         });
 
         const data = await response.json();

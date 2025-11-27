@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f8f8f8;
+}
+
+.vendor-container {
+  display: flex;
+}
+
+.sidebar {
+  width: 230px;
+  background: #ffffff;
+  height: 100vh;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+}
+
+.sidebar .brand {
+  text-align: center;
+  color: #00b050;
+  font-size: 1.4rem;
+  margin-bottom: 30px;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 12px;
+  margin-bottom: 10px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  background: #00b050;
+  color: #fff;
+}
+
+.sidebar nav a.logout {
+  margin-top: 40px;
+  background: #ff3b30;
+  color: white;
+}
+
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-box {
+  background: #fff;
+  padding: 20px;
+  width: 200px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.stat-box p {
+  font-size: 2rem;
+  color: #00b050;
+}
+
+.latest-orders {
+  margin-top: 40px;
+}
+
+.order-card {
+  background: white;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
