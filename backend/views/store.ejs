@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= vendorName %> | BeqaaGo</title>
+  <link rel="stylesheet" href="/styles/store.css" />
+</head>
+<body>
+
+  <%- include("partials/header") %>
+
+  <main class="store-page">
+
+    <div class="store-header">
+      <h1><%= vendorName %></h1>
+      <p class="location"><i class="fa-solid fa-location-dot"></i> <%= vendorLocation %></p>
+    </div>
+
+    <h2>Menu</h2>
+    <div id="menu-grid" class="menu-grid">Loading...</div>
+
+  </main>
+
+  <%- include("partials/footer") %>
+
+<script>
+  async function loadMenu() {
+    const vendorId = <%= vendorId %>;
+    const grid = document.getElementById("menu-grid");
+
+    try {
+      const res = await fetch(`/api/vendors/${vendorId}/menu`);
+      const items = await res.json();
+
+      if (!items.length) {
+        grid.innerHTML = "<p>No menu items available.</p>";
+        return;
+      }
+
+      grid.innerHTML = items.map(i => `
+        <div class="menu-card">
+          <img src="${i.image || '/images/default-food.jpg'}">
+          <h3>${i.item_name}</h3>
+          <p>$${i.price}</p>
+          <button onclick='addToCart(${JSON.stringify(i)})'>Add to Cart</button>
+        </div>
+      `).join("");
+
+    } catch (err) {
+      grid.innerHTML = "Failed to load menu.";
+    }
+  }
+
+  function addToCart(item) {
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    cart.push(item);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Added to cart!");
+  }
+
+  loadMenu();
+</script>
+
+</body>
+</html>
